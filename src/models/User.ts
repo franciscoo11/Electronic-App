@@ -38,8 +38,13 @@ const userSchema = new Schema({
   avatar: {
     type: String,
     required: false
-  }
-});
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true } );
 
 userSchema.methods.encryptPassword = async (password:string): Promise<string> => {
   const salt = await bcrypt.genSalt(10);
@@ -50,13 +55,13 @@ userSchema.methods.comparePassword = async function (password:string): Promise<b
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.set('toJSON', {
-  transform: (_document, returnedObject) => {
-    returnedObject.id = returnedObject._id;
-    delete returnedObject._id;
-    delete returnedObject.__v;
-    // delete returnedObject.password;
-  }
-});
+// userSchema.set('toJSON', {
+//   transform: (_document, returnedObject) => {
+//     returnedObject.id = returnedObject._id;
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//     // delete returnedObject.password;
+//   }
+// });
 
 export default model<IUser>('User', userSchema);
