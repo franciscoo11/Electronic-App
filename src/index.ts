@@ -1,11 +1,11 @@
 import 'dotenv/config';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import './database/config';
 import userRoutes from './routes/userRoutes';
 
-const app = express();
+const app: Application = express();
 
 app.use(morgan('dev'));
 app.use(cors());
