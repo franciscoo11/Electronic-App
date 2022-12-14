@@ -16,7 +16,7 @@ const productSchema = new Schema({
     type: String,
     required: true,
   }],
-  reviews: [
+  reviews_id: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Review' }
   ]
   ,
