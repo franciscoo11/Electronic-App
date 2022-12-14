@@ -5,7 +5,7 @@ import { hashPassword } from '../helpers/index';
 export const createUser = async (req: Request, res: Response) => {
   const { email, password, name, lastName } = req.body;
   if(!email || !password || !name || !lastName) return res.status(400).json({ message: 'Fields are required { email, name, lastName, password }'});
-  const hashedpw = hashPassword(password);
+  const hashedpw = await hashPassword(password);
   const createUser = await User.create({
     email,
     lastName,
@@ -38,7 +38,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   try {
     const { id } = req.params;
     const { email, password, name, lastName } = req.body;
-    const hashedpw = hashPassword(password);
+    const hashedpw = await hashPassword(password);
     const userById = await User.findByIdAndUpdate({ _id: id }, { ...req.body, email, password: hashedpw, name, lastName }, { new: true} );
     return userById ? res.status(200).json(userById) : res.status(400).json({ message: 'Id is not correct, check and try again'});
   } catch (error) {
