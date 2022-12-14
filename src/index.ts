@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import './database/config';
@@ -14,11 +14,18 @@ app.use(express.json());
 
 app.use('/api/v1/users', userRoutes);
 
-app.use((_req, res, next) => {
-  const error = new Error('not found');
-  return res.status(404).json({
-    message: error.message
-  });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((_req, res, _next) => {
+  res.status(404).json('Not Found');
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((error:Error, _req: Request, res: Response, _next: NextFunction) => {
+  if(error.name === 'CastError'){
+    res.status(400).json('Id used is not correct');
+  } else {
+    res.status(500).json('Something goes wrong, try again later.');
+  }
 });
 
 const PORT = process.env.PORT || 3001;
