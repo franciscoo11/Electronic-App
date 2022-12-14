@@ -9,11 +9,6 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  post_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required:true,
-    ref: 'Post',
-  },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required:true,
