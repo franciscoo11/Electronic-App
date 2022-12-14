@@ -1,4 +1,4 @@
-import { model, Schema, Document } from 'mongoose';
+import mongoose, { model, Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
@@ -29,6 +29,13 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true
   },
+  cart: [
+    {
+      ref: 'products',
+      type: mongoose.Types.ObjectId,
+      quantity: Number,
+    },
+  ],
   lastName: {
     type: String,
     required: true,
