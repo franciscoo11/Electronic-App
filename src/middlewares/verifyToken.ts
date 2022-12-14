@@ -2,9 +2,9 @@ import { Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 
 interface IPayload {
-    _id: string;
-    iat: number;
-    exp: number;
+  _id: string;
+  iat: number;
+  exp: number;
 }
 
 export const tokenValidation = (req: Request, res: Response, next: NextFunction) => {

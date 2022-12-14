@@ -33,3 +33,9 @@ export const login = async (req: Request, res: Response) => {
 
   return res.header('auth-token', token).json(user);
 };
+
+export const profile = async (req: Request, res: Response) => {
+  const user = await User.findById(req.userId, { password : 0, _v: 0});
+  if(!user) return res.status(404).json('No user was found');
+  res.json(user); 
+};
