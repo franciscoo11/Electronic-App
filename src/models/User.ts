@@ -1,4 +1,15 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
+
+export interface IUser extends Document {
+  email:string;
+  password:string;
+  name:string;
+  lastName:string;
+  avatar?:string;
+  encryptPassword(password:string): Promise<string>;
+  comparePassword(password:string): Promise<boolean>;
+}
 
 const userSchema = new Schema({
   email: {
@@ -18,6 +29,13 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true
   },
+  cart: [
+    {
+      ref: 'products',
+      type: mongoose.Types.ObjectId,
+      quantity: Number,
+    },
+  ],
   lastName: {
     type: String,
     required: true,
@@ -27,16 +45,30 @@ const userSchema = new Schema({
   avatar: {
     type: String,
     required: false
-  }
-});
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true } );
 
-userSchema.set('toJSON', {
-  transform: (_document, returnedObject) => {
-    returnedObject.id = returnedObject._id;
-    delete returnedObject._id;
-    delete returnedObject.__v;
-    // delete returnedObject.password;
-  }
-});
+userSchema.methods.encryptPassword = async (password:string): Promise<string> => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+};
 
-export default model('User', userSchema);
+userSchema.methods.comparePassword = async function (password:string): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
+
+// userSchema.set('toJSON', {
+//   transform: (_document, returnedObject) => {
+//     returnedObject.id = returnedObject._id;
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//     // delete returnedObject.password;
+//   }
+// });
+
+export default model<IUser>('User', userSchema);
