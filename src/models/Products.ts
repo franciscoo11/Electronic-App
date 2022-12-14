@@ -12,10 +12,10 @@ const productsSchema = new Schema({
     type: String,
     required: true,
   },
-  images: {
-    type: Array,
+  images: [{
+    type: String,
     required: true,
-  },
+  }],
   reviews: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Review' }
   ]
