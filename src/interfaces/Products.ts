@@ -2,7 +2,7 @@
 import {Types } from 'mongoose';
 
 interface IReviews{
-    id:Types.ObjectId
+    _id:Types.ObjectId
 }
 
 export interface IUProducts {
