@@ -5,7 +5,7 @@ interface IReviews{
     _id:Types.ObjectId
 }
 
-export interface IUProducts {
+export interface IProducts {
     name: string,
     description: string,
     images: Array<string>,
