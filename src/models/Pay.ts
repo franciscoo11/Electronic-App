@@ -31,7 +31,7 @@ const paySchema = new Schema({
       name: String,
       price: mongoose.Types.Decimal128,
       description: String,
-      quantity: Number,
+      stock: Number,
       required: false,
     },
   ],
