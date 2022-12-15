@@ -1,6 +1,6 @@
 import mongoose, { model, Schema } from 'mongoose';
 
-const userSchema = new Schema({
+const paySchema = new Schema({
   amount: {
     type: mongoose.Types.Decimal128,
     required: true,
@@ -8,11 +8,6 @@ const userSchema = new Schema({
   date: {
     type: Date,
     default: Date.now,
-  },
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required:true,
-    ref: 'User',
   },
   doReview:{
     type:Boolean,
@@ -43,4 +38,4 @@ const userSchema = new Schema({
 
 });
 
-export default model('Pay', userSchema);
+export default model('Pay', paySchema);
