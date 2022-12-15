@@ -5,7 +5,7 @@ interface IProducts{
     _id:Types.ObjectId
 }
 
-export interface IUCategory {
+export interface ICategory {
     products_id:Types.DocumentArray<IProducts>,
     name:string
 }
