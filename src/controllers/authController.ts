@@ -14,7 +14,7 @@ export const register = async (req: Request, res: Response) => {
 
   const addUser = await user.save();
 
-  const token: string = jwt.sign({_id: addUser._id}, <string>process.env.JWT_SECRET,  { 
+  const token: string = jwt.sign({_id: addUser._id, role: addUser.role}, <string>process.env.JWT_SECRET,  { 
     expiresIn: 60 * 60 * 24
   });
 
@@ -27,7 +27,7 @@ export const login = async (req: Request, res: Response) => {
   const checkPassword = await user.comparePassword(req.body.password);
   if(!checkPassword) return res.status(400).json('Invalid password');
 
-  const token: string = jwt.sign({_id: user._id}, <string>process.env.JWT_SECRET, { 
+  const token: string = jwt.sign({_id: user._id, role: user.role}, <string>process.env.JWT_SECRET, { 
     expiresIn: 60 * 60 * 24
   });
 

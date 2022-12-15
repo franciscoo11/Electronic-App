@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-export const handlerHttpError = (res: Response, error: Error) => {
+export const handlerHttpError = (res: Response, error: Error | unknown) => {
   console.log('Error server', error);
   res.status(500);
   res.send({ error: 'Something goes wrong, try again later' });

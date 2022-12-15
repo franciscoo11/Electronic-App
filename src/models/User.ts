@@ -1,5 +1,9 @@
-import mongoose, { model, Schema, Document } from 'mongoose';
+import mongoose, { model, Schema, Document, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
+
+interface ICart {
+  quantity: number
+}
 
 export interface IUser extends Document {
   email:string;
@@ -7,6 +11,8 @@ export interface IUser extends Document {
   name:string;
   lastName:string;
   avatar?:string;
+  role?:string;
+  cart?:Types.DocumentArray<ICart>
   encryptPassword(password:string): Promise<string>;
   comparePassword(password:string): Promise<boolean>;
 }
