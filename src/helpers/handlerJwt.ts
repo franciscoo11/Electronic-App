@@ -11,7 +11,7 @@ export const verifyToken = async (token: string) => {
   try {
     return await jwt.verify(token, <string>process.env.JWT_SECRET) as IPayload;
   } catch (err) {
-    err;
+    return null;
   }
 };
 

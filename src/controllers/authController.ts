@@ -7,6 +7,8 @@ export const register = async (req: Request, res: Response) => {
   try {
     const findUserExist = await User.findOne({ email: req.body.email });
     if (findUserExist) return handlerRespError(res, 'USER_ALREADY_EXIST', 401);
+
+    
   
     const user: IUser = new User({
       email: req.body.email,
@@ -16,6 +18,7 @@ export const register = async (req: Request, res: Response) => {
       avatar: req.body.avatar
     });
     user.password = await user.encryptPassword(user.password);
+    if(req.body.email === 'admin@electronicapp.com.ar') user.role = 'admin';
 
     const addUser = await user.save();
     return res.status(201).json(addUser);
