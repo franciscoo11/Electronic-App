@@ -68,6 +68,8 @@ userSchema.methods.comparePassword = async function (password:string): Promise<b
   return await bcrypt.compare(password, this.password);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+userSchema.plugin(require('mongoose-autopopulate'));
 // userSchema.set('toJSON', {
 //   transform: (_document, returnedObject) => {
 //     returnedObject.id = returnedObject._id;

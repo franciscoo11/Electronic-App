@@ -2,13 +2,13 @@ import mongoose, { model, Schema } from 'mongoose';
 
 const reviewSchema = new Schema({
   product: {
-    ref:'products',
+    ref:'Product',
     type: mongoose.Types.ObjectId,
   },
   user: [
     {
       type: mongoose.Types.ObjectId,
-      ref: 'users',
+      ref: 'User',
     },
   ],
   punctuation: {
@@ -19,6 +19,6 @@ const reviewSchema = new Schema({
     type: String,
     required: false
   }
-}, { timestamps: true} );
+}, { timestamps: true, strictPopulate: false, versionKey: false, } );
 
 export default model('Review', reviewSchema);
