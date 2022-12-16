@@ -3,8 +3,8 @@ import express, { Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import './database/config';
-import userRoutes from './routes/userRoutes';
-import authRoutes from './routes/authRoutes';
+import appRoutes from './routes';
+
 
 const app: Application = express();
 
@@ -13,8 +13,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false} ));
 app.use(express.json());
 
-app.use('/api/v1/users', userRoutes);
-app.use('/', authRoutes);
+app.use('/api/v1', appRoutes);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((_req, res, _next) => {
   res.status(404).json('Not Found');
