@@ -8,7 +8,8 @@ const categorySchema = new Schema({
   },
    
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false
 });
 
 // productsSchema.set('toJSON', {

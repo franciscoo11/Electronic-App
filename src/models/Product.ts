@@ -16,7 +16,7 @@ const productSchema = new Schema({
     type: String,
     required: true,
   }],
-  reviews_id: [
+  reviews: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Review' }
   ],
   category: [
@@ -29,7 +29,7 @@ const productSchema = new Schema({
     type: Number,
     required: true
   }
-});
+}, { timestamps: true, versionKey: false, strictPopulate: false, autopopulate: true });
 
 // productsSchema.set('toJSON', {
 //   transform: (_document, returnedObject) => {
@@ -38,5 +38,8 @@ const productSchema = new Schema({
 //     delete returnedObject.__v;
 //   }
 // });
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+productSchema.plugin(require('mongoose-autopopulate'));
 
 export default model('Product', productSchema);
