@@ -25,7 +25,7 @@ const productSchema = new Schema({
       type: mongoose.Types.ObjectId,
     },
   ],
-  inStock: {
+  stock: {
     type: Number,
     required: true
   }
