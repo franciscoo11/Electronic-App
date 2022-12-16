@@ -6,7 +6,6 @@ import './database/config';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
 
-
 const app: Application = express();
 
 app.use(morgan('dev'));

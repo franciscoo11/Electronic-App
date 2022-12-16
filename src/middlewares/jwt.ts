@@ -1,23 +1,41 @@
 import { Request, Response, NextFunction} from 'express';
-import jwt from 'jsonwebtoken';
 import { handlerHttpError, handlerRespError } from '../helpers/handlerError';
+import { verifyToken } from '../helpers/handlerJwt';
 
-interface IPayload {
-  _id: string;
-  iat: number;
-  exp: number;
-}
-
-export const tokenValidation = (req: Request, res: Response, next: NextFunction) => {
+export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('auth-token');
-    if(!token) return res.status(401).json('Access denied');
-  
-    const payload = jwt.verify(token, <string>process.env.JWT_SECRET) as IPayload;
-    if(!payload._id) handlerRespError(res,'NOT_PERMISSION', 409);
-    req.userId = payload._id;
+    if(!req.headers.authorization) {
+      return handlerRespError(res,'ACCESS_DENIED', 409);
+    }
+    const token = req.headers.authorization;
+    const payload = await verifyToken(token);
+    if(!payload?._id) return handlerRespError(res,'NOT_PERMISSION', 409);
     next();
   } catch (err) {
     handlerHttpError(res,err);
+  }
+};
+
+export const privateRoute = async (req: Request, res: Response, next: NextFunction) => {
+  if(req.headers.authorization){
+    try {
+      const token = req.headers.authorization;
+      const decodedToken = await verifyToken(token);
+      return decodedToken && next();
+    } catch (error) {
+      return res.status(401).json({message:'Wrong credentials, not authorized'});
+    }
+  }
+};
+
+export const adminRoute = async (req: Request, res: Response, next: NextFunction) => {
+  if(req.headers.authorization){
+    try {
+      const token = req.headers.authorization;
+      const decodedToken = await verifyToken(token);
+      if(decodedToken?.role === 'admin') return next();
+    } catch (error) {
+      return res.status(401).json({message:'Wrong credentials, not authorized'});
+    }
   }
 };

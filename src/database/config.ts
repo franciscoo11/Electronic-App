@@ -13,14 +13,3 @@ mongoose.connect(DB_URI, {
   console.error(err);
   process.exit(0);
 });
-
-// const connection = mongoose.connection;
-
-// connection.once('open', () => {
-//   console.log('DB connected');
-// });
-
-// connection.on('error', err => {
-//   console.error(err);
-//   process.exit(0);
-// });

@@ -1,64 +1,77 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import User, { IUser } from '../models/User';
+import { handlerHttpError, handlerRespError } from '../helpers/handlerError';
 
 export const createUser = async (req: Request, res: Response) => {
-  const { email, password, name, lastName } = req.body;
-  if(!email || !password || !name || !lastName) return res.status(400).json({ message: 'Fields are required { email, name, lastName, password }'});
-  const createUser: IUser = new User({
-    ...req.body,
-    email,
-    lastName,
-    name,
-    password
-  });
-  createUser.password = await createUser.encryptPassword(createUser.password);
-  const addNewUser = await createUser.save();
-  return addNewUser ? res.status(201).json(addNewUser) : res.status(400).json({ message: 'Check fields in the body and try again.'});
+  try {
+    const { email, password, name, lastName } = req.body;
+    if(!email || !password || !name || !lastName) return handlerRespError(res,'Fields email, password, name, lastName are required',400);
+
+    const createUser: IUser = new User({
+      ...req.body,
+      email,
+      lastName,
+      name,
+      password
+    });
+    createUser.password = await createUser.encryptPassword(createUser.password);
+
+    const addNewUser = await createUser.save();
+    return res.status(201).json(addNewUser);
+  } catch (error) {
+    handlerHttpError(res,'ERROR_IN_CREATE_USER');
+  }
 };
 
 export const getUsers = async (_req: Request, res: Response) => {
-  const allUsers = await User.find();
-
-  return allUsers.length ? res.status(200).json(allUsers) : res.status(404).json({ message: 'Users are empty.'});
-};
-
-export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const userById = await User.findById(id);
-
-    return userById ? res.status(201).json(userById) : res.status(404).json({ message: 'Users are empty.'});
+    const allUsers = await User.find();
+    return res.status(200).json(allUsers);
   } catch (error) {
-    return next(error);
+    handlerHttpError(res,'ERROR_IN_GET_ALLUSERS');
   }
-  
 };
 
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    if(!id) return handlerRespError(res,'Id was not sended',400);
+
+    const userById = await User.findById(id);
+    return res.status(200).json(userById); 
+  } catch (error) {
+    handlerHttpError(res,'ERROR_IN_GET_USER');
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if(!id) return handlerRespError(res,'Id was not sended',400);
+
     const { email, password, name, lastName } = req.body;
     const userById = await User.findByIdAndUpdate({ _id: id }, { ...req.body, email, password, name, lastName }, { new: true} );
+
     if (userById){
-      userById.password = await userById?.encryptPassword(userById.password);
+      userById.password = await userById.encryptPassword(userById.password);
       await userById.save();
     }
-    return userById ? res.status(200).json(userById) : res.status(400).json({ message: 'Id is not correct, check and try again'});
+    res.status(200).json(userById);
   } catch (error) {
-    return next(error);
+    handlerHttpError(res,'ERROR_IN_UPDATE_USER');
   }
-  
 };
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const saveUserToReturn = await User.findById(id);
-    const removeUserById = await User.deleteOne({ _id: id });
+    if(!id) return handlerRespError(res,'Id was not sended',400);
 
-    return removeUserById.acknowledged ? res.status(200).json(saveUserToReturn) : res.status(400).json({ message: 'Id is not correct, check and try again'});
+    const saveUserToReturn = await User.findById(id);
+    await User.findByIdAndDelete({ _id: id });
+
+    return res.status(200).json(saveUserToReturn);
   } catch (error) {
-    return next(error);
+    handlerHttpError(res,'ERROR_IN_DELETE_USER');
   }
-  
 };
