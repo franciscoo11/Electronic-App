@@ -18,8 +18,13 @@ const productSchema = new Schema({
   }],
   reviews_id: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Review' }
-  ]
-  ,
+  ],
+  category: [
+    {
+      ref: 'Category',
+      type: mongoose.Types.ObjectId,
+    },
+  ],
   inStock: {
     type: Number,
     required: true
@@ -34,4 +39,4 @@ const productSchema = new Schema({
 //   }
 // });
 
-export default model('Products', productSchema);
+export default model('Product', productSchema);

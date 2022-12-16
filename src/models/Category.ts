@@ -1,16 +1,14 @@
-import mongoose, { model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 const categorySchema = new Schema({
-  products_id:[
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }
-  ],
   name:{
     type:String,
     required:true,
     unique: true,
   },
    
-    
+}, {
+  timestamps: true
 });
 
 // productsSchema.set('toJSON', {
@@ -21,4 +19,4 @@ const categorySchema = new Schema({
 //   }
 // });
 
-export default model('Products', categorySchema);
+export default model('Category', categorySchema);
