@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import './database/config';
 import appRoutes from './routes';
 
-
 const app: Application = express();
 
 app.use(morgan('dev'));
