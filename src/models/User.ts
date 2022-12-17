@@ -57,7 +57,7 @@ const userSchema = new Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
-}, { timestamps: true } );
+}, { timestamps: true, versionKey: false, } );
 
 userSchema.methods.encryptPassword = async (password:string): Promise<string> => {
   const salt = await bcrypt.genSalt(10);
@@ -68,8 +68,6 @@ userSchema.methods.comparePassword = async function (password:string): Promise<b
   return await bcrypt.compare(password, this.password);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-userSchema.plugin(require('mongoose-autopopulate'));
 // userSchema.set('toJSON', {
 //   transform: (_document, returnedObject) => {
 //     returnedObject.id = returnedObject._id;

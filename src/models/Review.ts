@@ -19,6 +19,6 @@ const reviewSchema = new Schema({
     type: String,
     required: false
   }
-}, { timestamps: true, strictPopulate: false, versionKey: false, } );
+}, { timestamps: true, versionKey: false, } );
 
 export default model('Review', reviewSchema);
