@@ -1,5 +1,6 @@
 import mongoose, { model, Schema, Document, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { IReview } from '../interfaces/Review';
 
 interface ICart {
   quantity: number
@@ -13,6 +14,7 @@ export interface IUser extends Document {
   avatar?:string;
   role?:string;
   cart?:Types.DocumentArray<ICart>
+  reviews?:Types.DocumentArray<IReview>
   encryptPassword(password:string): Promise<string>;
   comparePassword(password:string): Promise<boolean>;
 }
@@ -57,6 +59,10 @@ const userSchema = new Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  reviews: [{
+    type: mongoose.Types.ObjectId,
+    ref: 'Review'
+  }]
 }, { timestamps: true, versionKey: false, } );
 
 userSchema.methods.encryptPassword = async (password:string): Promise<string> => {

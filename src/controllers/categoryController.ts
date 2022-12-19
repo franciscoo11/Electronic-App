@@ -23,14 +23,15 @@ export const getCategoryBiId = async (req: Request, res: Response) => {
 
 export const addCategory = async (req: Request, res: Response) => {
   try {
+    if(!req.body.name) return handlerRespError(res, 'MISSING_FIELD_NAME', 400);
     const existCategory = await Category.findOne({ name: req.body.name }); 
     if(existCategory) return handlerRespError(res, 'CATEGORY_ALREADY_EXIST', 400);
 
     const createCategory = new Category({
       ...req.body
     });
-
-    res.status(201).json(createCategory);
+    const addCategory = await createCategory.save();
+    res.status(201).json(addCategory);
   } catch (error) {
     handlerHttpError(res,'ERROR_ADD_CATEGORY');  
   }

@@ -8,8 +8,6 @@ export const register = async (req: Request, res: Response) => {
     const findUserExist = await User.findOne({ email: req.body.email });
     if (findUserExist) return handlerRespError(res, 'USER_ALREADY_EXIST', 401);
 
-    
-  
     const user: IUser = new User({
       email: req.body.email,
       name: req.body.name,

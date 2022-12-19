@@ -27,19 +27,21 @@ export const getReviewById = async ( req: Request, res: Response ) => {
 export const addReview = async ( req: Request, res: Response ) => {
   try {
     const { id } = req.params;
-    const createReview = await Review.create(req.body); 
-
     const product = await Product.findById(id);
-    createReview.product = product?.id;
 
-    const user= await User.findOne({ email: req.body.users.email });
-    createReview.user = user?.id;
+    const user= await User.findById(req.body.user);
+    if(!product || !user) return handlerRespError(res,'Fiels are invalid, check product id and user id', 400);
 
-    if(!createReview) return handlerRespError(res,'Review has not been created', 400);
-    
+    const createReview = new Review({
+      ...req.body,
+      product: product.id,
+      user: user.id,
+    });
     const saveReview = await createReview.save();
+
+    if(!saveReview) return handlerRespError(res,'Review has not been created', 400);
     const addReviewToProduct = await Product.findByIdAndUpdate(id, {
-      $addToSet: { reviews_id: saveReview}
+      $addToSet: { reviews: saveReview.id }
     });
     res.status(201).json(addReviewToProduct);
   } catch (error) {

@@ -1,21 +1,23 @@
 import { Request, Response } from 'express';
-// import {IProduct} from '../interfaces/Product';
+import {IProducts} from '../interfaces/Product';
 import Product from '../models/Product';
 import { handlerHttpError, handlerRespError } from '../helpers/handlerError';
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, images,stock,category } = req.body;
-    if(!name || !description || !images || !stock||!category) return handlerRespError(res,'Fields name, description, images, stock, category are required',400);
+    const { name, description, images, stock, category, price, reviews } = req.body;
+    if(!name || !description || !images || !stock || !price) return handlerRespError(res,'Fields name, description, images, stock, category are required',400);
 
-    const createProduct = new Product({
-      ...req.body,
+    const createProduct: IProducts  = await Product.create({
       name,
       description,
       images,
       category,
-      stock
+      stock,
+      price,
+      reviews
     });
+
     return res.status(201).json(createProduct);
   } catch (error) {
     handlerHttpError(res,'ERROR_IN_CREATE_PRODUCT');
@@ -24,7 +26,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (_req: Request, res: Response) => {
   try {
-    const allProducts = await Product.find();
+    const allProducts = await Product.find().populate('category').populate('reviews');
     return res.status(200).json(allProducts);
   } catch (error) {
     handlerHttpError(res,'ERROR_IN_GET_ALLPRODUCTS');
