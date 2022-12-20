@@ -13,6 +13,9 @@ const paySchema = new Schema({
     type:Boolean,
     default: false,
   },
+  paymentId: {
+    type: String
+  },
   buyer: {
     ref: 'User',
     type: mongoose.Types.ObjectId,
@@ -31,8 +34,7 @@ const paySchema = new Schema({
       name: String,
       price: mongoose.Types.Decimal128,
       description: String,
-      stock: Number,
-      required: false,
+      stock: Number
     },
   ],
 
