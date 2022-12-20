@@ -1,4 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose';
+import { IProducts } from '../interfaces/Product';
 
 const productSchema = new Schema({
   name: {
@@ -14,10 +15,10 @@ const productSchema = new Schema({
   },
   images: [{
     type: String,
-    required: true,
+    required: true
   }],
   reviews: [
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Review' }
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
   ],
   category: [
     {
@@ -26,6 +27,10 @@ const productSchema = new Schema({
     },
   ],
   stock: {
+    type: Number,
+    required: true
+  },
+  price: {
     type: Number,
     required: true
   }
@@ -39,4 +44,4 @@ const productSchema = new Schema({
 //   }
 // });
 
-export default model('Product', productSchema);
+export default model<IProducts>('Product', productSchema);
